@@ -135,6 +135,10 @@ AI 在執行任何變更時，必須逐項核對並切實遵守以下守則：
 - 不得引進需要 npm install、webpack、vite、Sass 等建置指令才能運作的外部依賴。
 - 外部 CDN 僅允許經授權的輕量化輔助工具（例如 KaTeX 數學式渲染 CDN）。
 
+### 守則六：GitHub Pages 部署與 .nojekyll 保護
+- 專案根目錄必須永遠保留 `.nojekyll` 檔案，以指示 GitHub Pages 關閉 Jekyll 建置引擎。
+- 這樣可徹底防止 Jekyll 內部 Liquid 解析器與 KaTeX LaTeX 數學公式符號（例如含有雙括號 `}}` 或複雜下標）產生衝突，避免 GitHub Pages 靜態編譯失敗導致文章子資料夾（`articles/`）無法發布而引發 404 錯誤。
+
 ---
 
 ## 6. HTML 頁面骨架參考範本
