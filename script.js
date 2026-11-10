@@ -1,12 +1,21 @@
 /**
  * StatNote 全站共用互動腳本 (script.js)
  * 負責功能：
+ * 0. GitHub Pages 專案子路徑結尾斜線修正（避免相對路徑解析跳脫儲存庫）
  * 1. 行動版導覽選單（Hamburger Menu）開關與點擊外部關閉
  * 2. 導覽列滾動陰影效果
  * 3. 頁面導覽項目 Active 狀態自動識別
  * 4. KaTeX 數學公式自動渲染支援
  * 5. 頁尾動態年份更新
  */
+
+// 立即執行：確保 GitHub Pages 專案目錄結尾具備斜線，保障相對路徑解析正確
+(function ensureTrailingSlashOnProjectRoot() {
+  const path = window.location.pathname;
+  if (path && !path.endsWith('/') && !path.includes('.')) {
+    window.location.replace(path + '/' + window.location.search + window.location.hash);
+  }
+})();
 
 document.addEventListener('DOMContentLoaded', () => {
   initMobileNav();
