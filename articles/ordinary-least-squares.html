@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>普通最小平方法（OLS） | StatNote 統計學習筆記</title>
+  <meta name="description" content="計量經濟學經典基石：簡單線性迴歸模型、殘差平方和（SSR）最小化微積分推導、高斯-馬可夫古典假設、BLUE 性質與教育報酬率經濟範例。">
+
+  <!-- 全站樣式表（相對路徑） -->
+  <link rel="stylesheet" href="../style.css">
+
+  <!-- 字體引入 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- KaTeX 數學公式 CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+</head>
+<body>
+
+  <!-- ========================================================================
+       全站一致頂部導覽列 (Navbar)
+       ======================================================================== -->
+  <header class="site-header">
+    <div class="container navbar-inner">
+      <a href="../index.html" class="brand-logo" aria-label="StatNote 首頁">
+        <div class="brand-icon">📐</div>
+        <span>StatNote</span>
+        <span class="brand-tagline">統計學習筆記</span>
+      </a>
+
+      <button class="nav-toggle-btn" aria-label="切換導覽選單" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav>
+        <ul class="nav-menu">
+          <li><a href="../index.html" class="nav-link">首頁</a></li>
+          <li><a href="../pages/probability.html" class="nav-link">機率論</a></li>
+          <li><a href="../pages/math-stat.html" class="nav-link">數理統計</a></li>
+          <li><a href="../pages/econometrics.html" class="nav-link active">計量經濟學</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       文章頂部橫幅與麵包屑導覽 (Breadcrumb Banner)
+       ======================================================================== -->
+  <section class="page-banner">
+    <div class="container">
+      <nav class="breadcrumb" aria-label="麵包屑導覽">
+        <a href="../index.html">首頁</a>
+        <span>/</span>
+        <a href="../pages/econometrics.html">計量經濟學</a>
+        <span>/</span>
+        <span aria-current="page">普通最小平方法（OLS）</span>
+      </nav>
+
+      <div class="page-title-group">
+        <div>
+          <span class="section-tag">Econometrics · Note #01</span>
+          <h1 class="article-main-title">普通最小平方法 (Ordinary Least Squares, OLS)</h1>
+          <p class="article-lead">
+            計量經濟學實證因果推論的第一塊基石：從簡單線性迴歸展開，解析最小化殘差平方和（SSR）之常態方程式推導、古典高斯-馬可夫假定、BLUE 定理與教育報酬率之經濟詮釋。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       文章主體：六大標準單元 (Article Main Content)
+       ======================================================================== -->
+  <main class="container">
+    <div class="article-wrapper">
+      <article>
+
+        <!-- --------------------------------------------------------------------
+             單元一：觀念介紹
+             -------------------------------------------------------------------- -->
+        <section class="article-section" id="section-1">
+          <h2>一、觀念介紹 (Concept Introduction)</h2>
+          <p>
+            在經濟學與社會科學中，我們經常想探討兩個變數之間的關聯或因果效應：例如「多受一年教育，薪資會增加多少？」、「政府提高最低工資，是否會降低青少年就業率？」、「降價促銷如何影響商品銷售量？」。
+          </p>
+          <p>
+            由於現實世界充滿了隨機干擾（如個人天賦、景氣波動、家庭背景等不可觀察因素），經濟變數之間的關係很少是精確不變的幾何函數，而是呈現散佈在空間中的點群。為了在混亂的數據中找出最具代表性的<strong>「平均趨勢線」</strong>，高斯（Carl Friedrich Gauss）與勒讓德（Adrien-Marie Legendre）提出了<strong>普通最小平方法（Ordinary Least Squares, 簡稱 OLS）</strong>。
+          </p>
+          <p>
+            OLS 的核心思想非常純粹：在所有可能的直線中，挑選一條直線，使得所有觀測值到這條直線的<strong>垂直距離（殘差）的平方總和達到最小</strong>。這條「最合身」的直線，就是我們理解經濟現象規律與預測未來趨勢的最佳工具。
+          </p>
+        </section>
+
+        <!-- --------------------------------------------------------------------
+             單元二：數學定義
+             -------------------------------------------------------------------- -->
+        <section class="article-section" id="section-2">
+          <h2>二、數學定義 (Mathematical Definition)</h2>
+
+          <h3>2.1 簡單線性迴歸母體模型 (Simple Linear Regression Model)</h3>
+          <p>
+            設有 $n$ 組橫斷面隨機抽樣觀測值 $(X_1, Y_1), (X_2, Y_2), \dots, (X_n, Y_n)$。簡單線性迴歸的母體模型定義為：
+          </p>
+          $$Y_i = \beta_0 + \beta_1 X_i + u_i, \quad i = 1, 2, \dots, n$$
+          <p>
+            各項變數與參數之嚴格定義如下：
+          </p>
+          <ul>
+            <li>$Y_i$：<strong>應變數（Dependent Variable / 被解釋變數）</strong>，例如個人的薪資水準。</li>
+            <li>$X_i$：<strong>自變數（Independent Variable / 解釋變數）</strong>，例如個人的受教育年數。</li>
+            <li>$\beta_0$：<strong>截距項參數（Intercept Parameter）</strong>，代表當 $X_i = 0$ 時，$Y$ 的基準期望水平。</li>
+            <li>$\beta_1$：<strong>斜率參數（Slope Parameter）</strong>，代表自變數 $X$ 每增加一個單位時，應變數 $Y$ 的邊際平均變動量：$\beta_1 = \frac{\Delta E[Y \mid X]}{\Delta X}$。</li>
+            <li>$u_i$：<strong>隨機誤差項（Error Term / 擾動項）</strong>，包含所有影響 $Y$ 但未納入模型中的其他未觀察因素（如個人動機、運氣、健康等）。</li>
+          </ul>
+
+          <h3>2.2 樣本迴歸函數與殘差 (Sample Regression Function & Residuals)</h3>
+          <p>
+            由於母體參數 $\beta_0, \beta_1$ 無法直接觀察，我們利用抽樣數據估計出 $\hat{\beta}_0, \hat{\beta}_1$，得到<strong>樣本迴歸函數（Sample Regression Function, SRF）</strong>：
+          </p>
+          $$\hat{Y}_i = \hat{\beta}_0 + \hat{\beta}_1 X_i$$
+          <p>其中 $\hat{Y}_i$ 稱為第 $i$ 個觀測值的<strong>配適值或預測值（Fitted Value）</strong>。</p>
+          <p>
+            真實觀測值 $Y_i$ 與模型預測值 $\hat{Y}_i$ 之間的垂直差距，稱為第 $i$ 個觀測值的<strong>殘差（Residual）</strong> $\hat{u}_i$：
+          </p>
+          $$\hat{u}_i \equiv Y_i - \hat{Y}_i = Y_i - (\hat{\beta}_0 + \hat{\beta}_1 X_i)$$
+
+          <h3>2.3 最小平方準則 (Least Squares Criterion)</h3>
+          <p>
+            OLS 的目標是選取一組係數估計式 $(\hat{\beta}_0, \hat{\beta}_1)$，使<strong>殘差平方和（Sum of Squared Residuals, SSR）</strong>最小化：
+          </p>
+          $$\min_{\hat{\beta}_0, \hat{\beta}_1} \text{SSR}(\hat{\beta}_0, \hat{\beta}_1) \equiv \sum_{i=1}^{n} \hat{u}_i^2 = \sum_{i=1}^{n} \left( Y_i - \hat{\beta}_0 - \hat{\beta}_1 X_i \right)^2$$
+          <p>
+            <em>為什麼使用平方？</em> 一方面避免正負殘差相互抵消，另一方面平方函數處處平滑連續且可微，且能對極端的大誤差施加較重的懲罰。
+          </p>
+
+          <h3>2.4 古典線性迴歸基本假設（高斯-馬可夫假定 Gauss-Markov Assumptions）</h3>
+          <p>
+            為了保證 OLS 估計式具備良好的統計性質，橫斷面計量分析依賴以下五大基本假定（$A_1 \sim A_5$）：
+          </p>
+          <ol>
+            <li><strong>假定一（參數線性 Linearity in Parameters）</strong>：母體模型可以表達成參數的線性組合 $Y = \beta_0 + \beta_1 X + u$。</li>
+            <li><strong>假定二（隨機抽樣 Random Sampling）</strong>：樣本資料 $\{(X_i, Y_i)\}_{i=1}^n$ 為來自母體的獨立同分佈隨機抽樣。</li>
+            <li><strong>假定三（解釋變數具變異性 Sample Variation in $X$）</strong>：樣本中 $X$ 的值不可完全相同，即樣本變異數大於零：$\sum_{i=1}^n (X_i - \bar{X})^2 > 0$。</li>
+            <li><strong>假定四（外生性假定 / 零條件平均 Zero Conditional Mean）</strong>：給定任何 $X$ 的數值，未觀測誤差項的條件期望值皆為零：
+              $$E[u \mid X] = 0$$
+              <em>（此假定是因果推論與 OLS 不偏性的核心！若 $X$ 與 $u$ 相關，則產生內生性 Endogeneity，導致估計偏誤）。</em>
+            </li>
+            <li><strong>假定五（同質變異數 Homoskedasticity）</strong>：給定任何 $X$，誤差項的條件變異數為固定常數：
+              $$\text{Var}(u \mid X) = \sigma^2$$
+            </li>
+          </ol>
+          <p>
+            <strong>高斯-馬可夫定理（Gauss-Markov Theorem）</strong>：在假定一至五成立下，OLS 估計量是所有線性不偏估計量中變異數最小的，即<strong>最佳線性不偏估計量（BLUE, Best Linear Unbiased Estimator）</strong>。
+          </p>
+        </section>
+
+        <!-- --------------------------------------------------------------------
+             單元三：重要公式
+             -------------------------------------------------------------------- -->
+        <section class="article-section" id="section-3">
+          <h2>三、重要公式 (Key Formulae)</h2>
+
+          <div class="formula-highlight">
+            <div class="formula-highlight-title">📌 OLS 估計式與代數性質</div>
+            <div class="math-block">
+              $$\hat{\beta}_1 = \frac{\sum_{i=1}^n (X_i - \bar{X})(Y_i - \bar{Y})}{\sum_{i=1}^n (X_i - \bar{X})^2} = \frac{\text{Cov}(X, Y)}{\text{Var}(X)}$$
+              $$\hat{\beta}_0 = \bar{Y} - \hat{\beta}_1 \bar{X}$$
+              $$\sum_{i=1}^n \hat{u}_i = 0 \implies \bar{\hat{u}} = 0 \quad (\text{殘差平均數必為零})$$
+              $$\sum_{i=1}^n X_i \hat{u}_i = 0 \implies \text{Cov}(X, \hat{u}) = 0 \quad (\text{殘差與自變數正交})$$
+              $$\text{迴歸線必穿過樣本平均點 } (\bar{X}, \bar{Y})$$
+            </div>
+            <p style="margin-top: 14px; font-size: 0.92rem; color: var(--color-coffee-medium);">
+              <strong>符號意義說明：</strong><br>
+              • $\bar{X} = \frac{1}{n}\sum_{i=1}^n X_i$：自變數之樣本平均數。<br>
+              • $\bar{Y} = \frac{1}{n}\sum_{i=1}^n Y_i$：應變數之樣本平均數。<br>
+              • $\hat{\beta}_1$：斜率估計式，即樣本共變異數與自變數樣本變異數的比值。<br>
+              • $\hat{\beta}_0$：截距估計式。<br>
+              • $\hat{u}_i$：最小平方法殘差。
+            </p>
+          </div>
+        </section>
+
+        <!-- --------------------------------------------------------------------
+             單元四：詳細推導
+             -------------------------------------------------------------------- -->
+        <section class="article-section" id="section-4">
+          <h2>四、詳細推導 (Detailed Derivation)</h2>
+
+          <h3>4.1 一階條件（常態方程式 Normal Equations）</h3>
+          <p>
+            目標函數為殘差平方和：
+          </p>
+          $$\text{SSR}(\hat{\beta}_0, \hat{\beta}_1) = \sum_{i=1}^{n} \left( Y_i - \hat{\beta}_0 - \hat{\beta}_1 X_i \right)^2$$
+          <p>
+            分別對未知參數 $\hat{\beta}_0$ 與 $\hat{\beta}_1$ 偏微分，並利用鏈鎖律：
+          </p>
+          <div class="math-block">
+            \begin{aligned}
+            \frac{\partial \text{SSR}}{\partial \hat{\beta}_0} &= \sum_{i=1}^n 2\left( Y_i - \hat{\beta}_0 - \hat{\beta}_1 X_i \right) \cdot (-1) = -2 \sum_{i=1}^n \left( Y_i - \hat{\beta}_0 - \hat{\beta}_1 X_i \right) \\
+            \frac{\partial \text{SSR}}{\partial \hat{\beta}_1} &= \sum_{i=1}^n 2\left( Y_i - \hat{\beta}_0 - \hat{\beta}_1 X_i \right) \cdot (-X_i) = -2 \sum_{i=1}^n X_i \left( Y_i - \hat{\beta}_0 - \hat{\beta}_1 X_i \right)
+            \end{aligned}
+          </div>
+          <p>
+            令一階偏導數等於零（FOC），將 $-2$ 除掉，得到經典的<strong>常態方程式系統（Normal Equations）</strong>：
+          </p>
+          $$\sum_{i=1}^n \left( Y_i - \hat{\beta}_0 - \hat{\beta}_1 X_i \right) = 0 \implies \sum_{i=1}^n \hat{u}_i = 0 \quad \text{--- (式 1)}$$
+          $$\sum_{i=1}^n X_i \left( Y_i - \hat{\beta}_0 - \hat{\beta}_1 X_i \right) = 0 \implies \sum_{i=1}^n X_i \hat{u}_i = 0 \quad \text{--- (式 2)}$$
+
+          <h3>4.2 求解截距估計式 $\hat{\beta}_0$</h3>
+          <p>
+            展開式 1：
+          </p>
+          $$\sum_{i=1}^n Y_i - \sum_{i=1}^n \hat{\beta}_0 - \hat{\beta}_1 \sum_{i=1}^n X_i = 0$$
+          <p>注意 $\sum_{i=1}^n \hat{\beta}_0 = n \hat{\beta}_0$：</p>
+          $$\sum_{i=1}^n Y_i - n\hat{\beta}_0 - \hat{\beta}_1 \sum_{i=1}^n X_i = 0$$
+          <p>全式除以樣本容量 $n$：</p>
+          $$\bar{Y} - \hat{\beta}_0 - \hat{\beta}_1 \bar{X} = 0 \implies \hat{\beta}_0 = \bar{Y} - \hat{\beta}_1 \bar{X}$$
+          <p><em>結論：只要給定斜率 $\hat{\beta}_1$，截距項直接由平均值點 $(\bar{X}, \bar{Y})$ 決定，這也證明了迴歸直線必然通過樣本中心點。</em></p>
+
+          <h3>4.3 求解斜率估計式 $\hat{\beta}_1$</h3>
+          <p>
+            將 $\hat{\beta}_0 = \bar{Y} - \hat{\beta}_1 \bar{X}$ 代入式 2：
+          </p>
+          $$\sum_{i=1}^n X_i \left[ Y_i - (\bar{Y} - \hat{\beta}_1 \bar{X}) - \hat{\beta}_1 X_i \right] = 0$$
+          <p>整理括號內部：</p>
+          $$\sum_{i=1}^n X_i \left[ (Y_i - \bar{Y}) - \hat{\beta}_1 (X_i - \bar{X}) \right] = 0$$
+          <p>拆開求和：</p>
+          $$\sum_{i=1}^n X_i (Y_i - \bar{Y}) - \hat{\beta}_1 \sum_{i=1}^n X_i (X_i - \bar{X}) = 0$$
+          <p>
+            現在利用兩個基本的代數離均差恆等式（因為 $\sum (X_i - \bar{X}) = 0$）：
+          </p>
+          $$\sum_{i=1}^n X_i (Y_i - \bar{Y}) = \sum_{i=1}^n (X_i - \bar{X})(Y_i - \bar{Y})$$
+          $$\sum_{i=1}^n X_i (X_i - \bar{X}) = \sum_{i=1}^n (X_i - \bar{X})^2$$
+          <p>代回整理即得斜率估計式之最終形式：</p>
+          $$\hat{\beta}_1 = \frac{\sum_{i=1}^n (X_i - \bar{X})(Y_i - \bar{Y})}{\sum_{i=1}^n (X_i - \bar{X})^2}$$
+        </section>
+
+        <!-- --------------------------------------------------------------------
+             單元五：範例題目與數值計算
+             -------------------------------------------------------------------- -->
+        <section class="article-section" id="section-5">
+          <h2>五、範例題目 (Example Problems)</h2>
+
+          <div class="example-box">
+            <div class="example-header">
+              <span>【經典例題】明瑟工資方程簡化版：教育年數與時薪</span>
+              <span class="example-badge">計量實證題</span>
+            </div>
+            <p>
+              <strong>題目敘述：</strong><br>
+              計量經濟學研究者調查了 5 位勞工的受教育年數 $X$（年）與其平均時薪 $Y$（美元），觀測數據記錄如下：
+            </p>
+            <ul>
+              <li>受試者 1：$X_1 = 12$ 年（高中畢業），$Y_1 = 15$ 美元</li>
+              <li>受試者 2：$X_2 = 14$ 年（大專副學士），$Y_2 = 20$ 美元</li>
+              <li>受試者 3：$X_3 = 16$ 年（大學學士），$Y_3 = 25$ 美元</li>
+              <li>受試者 4：$X_4 = 16$ 年（大學學士），$Y_4 = 30$ 美元</li>
+              <li>受試者 5：$X_5 = 18$ 年（碩士畢業），$Y_5 = 35$ 美元</li>
+            </ul>
+            <p>
+              請計算 OLS 迴歸方程式的截距 $\hat{\beta}_0$ 與斜率 $\hat{\beta}_1$，並解釋其經濟意涵。
+            </p>
+
+            <div class="example-steps">
+              <div class="example-step-title">步驟一：計算樣本平均數</div>
+              $$\bar{X} = \frac{12 + 14 + 16 + 16 + 18}{5} = \frac{76}{5} = 15.2 \text{ 年}$$
+              $$\bar{Y} = \frac{15 + 20 + 25 + 30 + 35}{5} = \frac{125}{5} = 25.0 \text{ 美元}$$
+
+              <div class="example-step-title">步驟二：列表計算離均差、乘積與平方和</div>
+              <table style="width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.95rem;">
+                <thead>
+                  <tr style="background-color: var(--color-milk-tea-light); border-bottom: 2px solid var(--border-medium); text-align: center;">
+                    <th style="padding: 8px;">勞工 $i$</th>
+                    <th style="padding: 8px;">$X_i$</th>
+                    <th style="padding: 8px;">$Y_i$</th>
+                    <th style="padding: 8px;">$(X_i - \bar{X})$</th>
+                    <th style="padding: 8px;">$(Y_i - \bar{Y})$</th>
+                    <th style="padding: 8px;">$(X_i - \bar{X})^2$</th>
+                    <th style="padding: 8px;">$(X_i - \bar{X})(Y_i - \bar{Y})$</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr style="text-align: center; border-bottom: 1px solid var(--border-light);">
+                    <td style="padding: 6px;">1</td><td>12</td><td>15</td><td>$-3.2$</td><td>$-10$</td><td>$10.24$</td><td>$+32.0$</td>
+                  </tr>
+                  <tr style="text-align: center; border-bottom: 1px solid var(--border-light);">
+                    <td style="padding: 6px;">2</td><td>14</td><td>20</td><td>$-1.2$</td><td>$-5$</td><td>$1.44$</td><td>$+6.0$</td>
+                  </tr>
+                  <tr style="text-align: center; border-bottom: 1px solid var(--border-light);">
+                    <td style="padding: 6px;">3</td><td>16</td><td>25</td><td>$+0.8$</td><td>$0$</td><td>$0.64$</td><td>$0.0$</td>
+                  </tr>
+                  <tr style="text-align: center; border-bottom: 1px solid var(--border-light);">
+                    <td style="padding: 6px;">4</td><td>16</td><td>30</td><td>$+0.8$</td><td>$+5$</td><td>$0.64$</td><td>$+4.0$</td>
+                  </tr>
+                  <tr style="text-align: center; border-bottom: 2px solid var(--border-medium);">
+                    <td style="padding: 6px;">5</td><td>18</td><td>35</td><td>$+2.8$</td><td>$+10$</td><td>$7.84$</td><td>$+28.0$</td>
+                  </tr>
+                  <tr style="font-weight: bold; background-color: var(--bg-secondary); text-align: center;">
+                    <td style="padding: 8px;">總和 $\sum$</td><td>76</td><td>125</td><td>0</td><td>0</td><td><strong>20.80</strong></td><td><strong>70.00</strong></td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="example-step-title">步驟三：計算斜率 $\hat{\beta}_1$ 與截距 $\hat{\beta}_0$</div>
+              $$\hat{\beta}_1 = \frac{\sum (X_i - \bar{X})(Y_i - \bar{Y})}{\sum (X_i - \bar{X})^2} = \frac{70.00}{20.80} \approx 3.3654 \text{ 美元/年}$$
+              <p>代入求截距：</p>
+              $$\hat{\beta}_0 = \bar{Y} - \hat{\beta}_1 \bar{X} = 25.0 - (3.3654 \times 15.2) = 25.0 - 51.154 = -26.154 \text{ 美元}$$
+
+              <div class="example-step-title">步驟四：寫出配適方程式與經濟意涵詮釋</div>
+              <p>
+                估計得到的樣本迴歸直線為：
+              </p>
+              $$\widehat{\text{Wage}}_i = -26.154 + 3.365 \times \text{Education}_i$$
+              <p>
+                <strong>經濟意涵（Economic Interpretation）：</strong>
+              </p>
+              <ul>
+                <li><strong>斜率 $\hat{\beta}_1 = 3.365$</strong>：在其他條件不變下（<em>ceteris paribus</em>），勞工每多接受 1 年的正規教育，其平均時薪預期將<strong>增加約 $3.37$ 美元</strong>。此係數衡量了教育的邊際市場回報。</li>
+                <li><strong>截距 $\hat{\beta}_0 = -26.154$</strong>：數學上代表受教育年數為 0 時的預測薪資。但在實質經濟上，樣本數據皆在 12 年以上，在遠離數據範圍的外推時，負薪資並不具實質意義，截距項主要扮演錨定迴歸線通過平均點的幾何角色。</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- --------------------------------------------------------------------
+             單元六：重點整理
+             -------------------------------------------------------------------- -->
+        <section class="article-section" id="section-6">
+          <h2>六、重點整理 (Summary & Key Takeaways)</h2>
+
+          <div class="summary-card">
+            <h3>💡 OLS 核心考點精華整理</h3>
+            <ul class="summary-list">
+              <li><strong>最小化準則</strong>：OLS 透過最小化垂直殘差平方和 $\sum \hat{u}_i^2$，推導出常態方程式。</li>
+              <li><strong>代數性質三大鐵則（無需任何統計假定即可成立）</strong>：
+                <ol style="margin-left: 20px; margin-top: 4px;">
+                  <li>殘差和為零：$\sum \hat{u}_i = 0$。</li>
+                  <li>殘差與自變數樣本無關：$\sum X_i \hat{u}_i = 0$。</li>
+                  <li>樣本平均點 $(\bar{X}, \bar{Y})$ 必然落在迴歸線上。</li>
+                </ol>
+              </li>
+              <li><strong>外生性假定 $E[u \mid X] = 0$ 是關鍵</strong>：此假定確保了 OLS 估計量的不偏性（$E[\hat{\beta}_1] = \beta_1$）。若存在遺漏變數、反向因果或測量誤差，導致 $\text{Cov}(X, u) \ne 0$，OLS 估計量將失去一致性與因果詮釋力。</li>
+              <li><strong>高斯-馬可夫定理 (BLUE)</strong>：在五大古典假設下，OLS 是所有線性不偏估計量中效率最高的（變異數最小）。</li>
+            </ul>
+          </div>
+        </section>
+
+      </article>
+
+      <!-- 文章底部導航按鈕 -->
+      <div class="article-nav-actions">
+        <a href="../pages/econometrics.html" class="btn btn-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>返回 計量經濟學 目錄</span>
+        </a>
+        <a href="../index.html" class="btn btn-outline">返回網站首頁</a>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ========================================================================
+       全站一致頁尾 (Footer)
+       ======================================================================== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="brand-logo" style="margin-bottom: 12px;">
+            <div class="brand-icon">📐</div>
+            <span>StatNote</span>
+          </div>
+          <p>以溫暖文青的視覺設計，記錄機率論、數理統計與計量經濟學的直觀直覺與嚴謹推導。</p>
+        </div>
+
+        <div class="footer-nav">
+          <h4>主題分類</h4>
+          <ul class="footer-links">
+            <li><a href="../pages/probability.html">🎲 機率論 (Probability)</a></li>
+            <li><a href="../pages/math-stat.html">📊 數理統計 (Mathematical Statistics)</a></li>
+            <li><a href="../pages/econometrics.html">📈 計量經濟學 (Econometrics)</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-nav">
+          <h4>專案資訊</h4>
+          <ul class="footer-links">
+            <li><a href="../README.md">📖 專案 README</a></li>
+            <li><a href="../AGENTS.md">🤖 協作規範 AGENTS.md</a></li>
+            <li><a href="https://github.com" target="_blank" rel="noopener noreferrer">🌐 GitHub Pages 託管</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>© <span id="current-year">2026</span> <strong>StatNote 統計學習筆記站</strong>. All rights reserved.</div>
+        <div>Designed with Warm Literary Aesthetic · Pure HTML / CSS / JS</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 全站共用互動腳本（相對路徑） -->
+  <script src="../script.js"></script>
+</body>
+</html>

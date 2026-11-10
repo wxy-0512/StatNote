@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>機率公理與條件機率 | StatNote 統計學習筆記</title>
+  <meta name="description" content="深入解析柯爾莫哥洛夫機率三大公理、條件機率定義、幾何直觀、乘法法則、事件獨立性與經典計算範例。">
+
+  <!-- 全站樣式表（相對路徑） -->
+  <link rel="stylesheet" href="../style.css">
+
+  <!-- 字體引入 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- KaTeX 數學公式 CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+</head>
+<body>
+
+  <!-- ========================================================================
+       全站一致頂部導覽列 (Navbar)
+       ======================================================================== -->
+  <header class="site-header">
+    <div class="container navbar-inner">
+      <a href="../index.html" class="brand-logo" aria-label="StatNote 首頁">
+        <div class="brand-icon">📐</div>
+        <span>StatNote</span>
+        <span class="brand-tagline">統計學習筆記</span>
+      </a>
+
+      <button class="nav-toggle-btn" aria-label="切換導覽選單" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav>
+        <ul class="nav-menu">
+          <li><a href="../index.html" class="nav-link">首頁</a></li>
+          <li><a href="../pages/probability.html" class="nav-link active">機率論</a></li>
+          <li><a href="../pages/math-stat.html" class="nav-link">數理統計</a></li>
+          <li><a href="../pages/econometrics.html" class="nav-link">計量經濟學</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       文章頂部橫幅與麵包屑導覽 (Breadcrumb Banner)
+       ======================================================================== -->
+  <section class="page-banner">
+    <div class="container">
+      <nav class="breadcrumb" aria-label="麵包屑導覽">
+        <a href="../index.html">首頁</a>
+        <span>/</span>
+        <a href="../pages/probability.html">機率論</a>
+        <span>/</span>
+        <span aria-current="page">機率公理與條件機率</span>
+      </nav>
+
+      <div class="page-title-group">
+        <div>
+          <span class="section-tag">Probability · Note #01</span>
+          <h1 class="article-main-title">機率公理與條件機率 (Probability Axioms & Conditional Probability)</h1>
+          <p class="article-lead">
+            從樣本空間與測度觀點出發，探討近代機率論的數學奠基石——柯爾莫哥洛夫三大公理，並釐清條件機率的幾何本質、乘法鏈式法則與事件獨立之真諦。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       文章主體：六大標準單元 (Article Main Content)
+       ======================================================================== -->
+  <main class="container">
+    <div class="article-wrapper">
+      <article>
+
+        <!-- --------------------------------------------------------------------
+             單元一：觀念介紹
+             -------------------------------------------------------------------- -->
+        <section class="article-section" id="section-1">
+          <h2>一、觀念介紹 (Concept Introduction)</h2>
+          <p>
+            在日常生活中，我們常說「今天降雨機率 70%」或「投擲公平硬幣正面機率是 1/2」。然而，在 20 世紀初之前，機率論往往建立在拉普拉斯（Laplace）的古典「等可能假設」或頻率學派的「極限次數」直觀上。這些直觀在面對無限樣本空間或連續型幾何機率（例如著名的貝特朗悖論 Bertrand's Paradox）時，常產生邏輯漏洞與自相矛盾。
+          </p>
+          <p>
+            1933 年，俄國數學家柯爾莫哥洛夫（Andrey Kolmogorov）發表了《機率論的基礎概念》，將機率建立於<strong>測度論（Measure Theory）</strong>之上：將「樣本空間」視為全集，「事件」視為可測子集，而「機率」則是一種將事件映射至實數的測度。如同我們量測長度、面積或質量一樣，機率本質上就是賦予隨機事件一個介於 0 到 1 之間的「權重（Mass）」。
+          </p>
+          <p>
+            而當外界產生新資訊時，我們所關注的可能情境將被縮小。這時，我們需要一套合乎邏輯的縮放機制來更新各事件的權重，這正是<strong>條件機率（Conditional Probability）</strong>的核心：它不是改變客觀機率法則，而是<strong>將評估的視角縮限在已知發生的子空間中重新歸一化</strong>。
+          </p>
+        </section>
+
+        <!-- --------------------------------------------------------------------
+             單元二：數學定義
+             -------------------------------------------------------------------- -->
+        <section class="article-section" id="section-2">
+          <h2>二、數學定義 (Mathematical Definition)</h2>
+
+          <h3>2.1 機率空間與柯爾莫哥洛夫三大公理</h3>
+          <p>
+            設 $\Omega$ 為一個隨機試驗的所有可能結果所構成的集合，稱為<strong>樣本空間（Sample Space）</strong>；$\mathcal{F}$ 為由 $\Omega$ 的子集所形成的 $\sigma$-代數（$\sigma$-algebra），其中的元素稱為<strong>事件（Events）</strong>。
+          </p>
+          <p>
+            定義在可測空間 $(\Omega, \mathcal{F})$ 上的實值函數 $P: \mathcal{F} \to \mathbb{R}$，若滿足以下三大條件，則稱 $P$ 為定義在 $\mathcal{F}$ 上的<strong>機率測度（Probability Measure）</strong>，三元組 $(\Omega, \mathcal{F}, P)$ 稱為<strong>機率空間（Probability Space）</strong>：
+          </p>
+          <ul>
+            <li>
+              <strong>公理一：非負性（Non-negativity）</strong><br>
+              對任意事件 $A \in \mathcal{F}$，均有：
+              $$P(A) \ge 0$$
+            </li>
+            <li>
+              <strong>公理二：規範性（Normalization / Unit Measure）</strong><br>
+              必然事件（全集合）的機率必為 1：
+              $$P(\Omega) = 1$$
+            </li>
+            <li>
+              <strong>公理三：可數可加性（Countable Additivity / $\sigma$-Additivity）</strong><br>
+              設序列 $A_1, A_2, A_3, \dots \in \mathcal{F}$ 為一列<strong>兩兩互斥（Pairwise Disjoint）</strong>的事件（即當 $i \ne j$ 時，$A_i \cap A_j = \emptyset$），則可數個互斥事件之聯集的機率等於各事件機率之無窮級數和：
+              $$P\left( \bigcup_{i=1}^{\infty} A_i \right) = \sum_{i=1}^{\infty} P(A_i)$$
+            </li>
+          </ul>
+
+          <h3>2.2 條件機率的定義 (Conditional Probability)</h3>
+          <p>
+            設 $A, B \in \mathcal{F}$ 為機率空間中的兩個事件，且滿足 $P(B) > 0$。在「事件 $B$ 已發生」的條件下，事件 $A$ 發生的<strong>條件機率（Conditional Probability of $A$ given $B$）</strong>定義為：
+          </p>
+          $$P(A \mid B) = \frac{P(A \cap B)}{P(B)}$$
+
+          <h3>2.3 乘法法則與鏈式法則 (Multiplication Rule & Chain Rule)</h3>
+          <p>
+            由條件機率定義立即可得<strong>乘法法則</strong>：若 $P(B) > 0$ 與 $P(A) > 0$，則兩事件同時發生（交集）的機率為：
+          </p>
+          $$P(A \cap B) = P(B) P(A \mid B) = P(A) P(B \mid A)$$
+          <p>
+            將此概念推廣至 $n$ 個事件 $A_1, A_2, \dots, A_n$（假設 $P(A_1 \cap \dots \cap A_{n-1}) > 0$），可得廣義的<strong>機率鏈式法則（Chain Rule of Probability）</strong>：
+          </p>
+          $$P\left(\bigcap_{i=1}^{n} A_i\right) = P(A_1) P(A_2 \mid A_1) P(A_3 \mid A_1 \cap A_2) \dots P(A_n \mid A_1 \cap \dots \cap A_{n-1})$$
+
+          <h3>2.4 事件的統計獨立性 (Statistical Independence)</h3>
+          <p>
+            兩個事件 $A, B \in \mathcal{F}$ 被稱為<strong>相互獨立（Statistically Independent）</strong>，若且唯若它們的交集機率滿足乘積因式分解：
+          </p>
+          $$P(A \cap B) = P(A) P(B)$$
+          <p>
+            當 $P(B) > 0$ 時，此定義等價於 $P(A \mid B) = P(A)$；也就是說，「事件 $B$ 是否發生，完全不提供任何關於事件 $A$ 發生可能性的新資訊」。
+          </p>
+        </section>
+
+        <!-- --------------------------------------------------------------------
+             單元三：重要公式
+             -------------------------------------------------------------------- -->
+        <section class="article-section" id="section-3">
+          <h2>三、重要公式 (Key Formulae)</h2>
+
+          <div class="formula-highlight">
+            <div class="formula-highlight-title">📌 核心公式彙整</div>
+            <div class="math-block">
+              $$P(A^c) = 1 - P(A)$$
+              $$P(A \cup B) = P(A) + P(B) - P(A \cap B)$$
+              $$P(A \mid B) = \frac{P(A \cap B)}{P(B)} \quad (\text{條件：} P(B) > 0)$$
+              $$P(A \cap B) = P(B) P(A \mid B)$$
+              $$P(A \cap B) = P(A)P(B) \iff A \text{ 與 } B \text{ 獨立}$$
+            </div>
+            <p style="margin-top: 14px; font-size: 0.92rem; color: var(--color-coffee-medium);">
+              <strong>符號意義說明：</strong><br>
+              • $\Omega$：樣本空間（全集），包含所有可能試驗結果。<br>
+              • $A, B$：屬於 $\sigma$-代數的隨機事件。<br>
+              • $A^c$：事件 $A$ 的餘事件（補集），即 $A$ 不發生的事件（$\Omega \setminus A$）。<br>
+              • $A \cap B$：事件 $A$ 與事件 $B$ 同時發生的交集事件。<br>
+              • $A \cup B$：事件 $A$ 或事件 $B$ 發生的聯集事件。<br>
+              • $P(A \mid B)$：在事件 $B$ 已確定發生的已知條件下，事件 $A$ 成立的條件機率。
+            </p>
+          </div>
+        </section>
+
+        <!-- --------------------------------------------------------------------
+             單元四：詳細推導
+             -------------------------------------------------------------------- -->
+        <section class="article-section" id="section-4">
+          <h2>四、詳細推導 (Detailed Derivation)</h2>
+
+          <h3>4.1 推導餘事件公式與空集合機率</h3>
+          <p>
+            由集合論可知，全集可以分割為任意事件及其補集的互斥聯集：$\Omega = A \cup A^c$，且 $A \cap A^c = \emptyset$。
+          </p>
+          <div class="math-block">
+            \begin{aligned}
+            P(\Omega) &= P(A \cup A^c) \\
+            &= P(A) + P(A^c) \quad (\text{依據公理三：兩互斥事件聯集等於機率和})
+            \end{aligned}
+          </div>
+          <p>
+            再代入公理二（$P(\Omega) = 1$），得：
+          </p>
+          $$1 = P(A) + P(A^c) \implies P(A^c) = 1 - P(A)$$
+          <p>
+            若取 $A = \Omega$，則 $A^c = \emptyset$（空事件），立即可證：
+          </p>
+          $$P(\emptyset) = 1 - P(\Omega) = 1 - 1 = 0$$
+
+          <h3>4.2 證明：條件機率 $P(\cdot \mid B)$ 本身構成一個合法的機率測度</h3>
+          <p>
+            許多初學者誤以為條件機率只是人為定義的比值。事實上，固定任意滿足 $P(B) > 0$ 的事件 $B$，將對任意事件 $A$ 的條件機率視為一個新的設定函數 $Q(A) \equiv P(A \mid B)$，我們可以嚴格證明 $Q$ 滿足柯爾莫哥洛夫三大公理：
+          </p>
+          <ol>
+            <li>
+              <strong>驗證非負性：</strong><br>
+              因為 $P(A \cap B) \ge 0$ 且 $P(B) > 0$，所以：
+              $$Q(A) = \frac{P(A \cap B)}{P(B)} \ge 0$$
+            </li>
+            <li>
+              <strong>驗證規範性：</strong><br>
+              當考慮全集 $\Omega$ 時，$\Omega \cap B = B$：
+              $$Q(\Omega) = \frac{P(\Omega \cap B)}{P(B)} = \frac{P(B)}{P(B)} = 1$$
+            </li>
+            <li>
+              <strong>驗證可數可加性：</strong><br>
+              若 $A_1, A_2, \dots$ 兩兩互斥，則 $(A_1 \cap B), (A_2 \cap B), \dots$ 亦必然兩兩互斥。利用原機率測度 $P$ 的公理三與集合分配律：
+              $$\left(\bigcup_{i=1}^\infty A_i\right) \cap B = \bigcup_{i=1}^\infty (A_i \cap B)$$
+              因此：
+              $$Q\left(\bigcup_{i=1}^\infty A_i\right) = \frac{P\left(\bigcup_{i=1}^\infty (A_i \cap B)\right)}{P(B)} = \frac{\sum_{i=1}^\infty P(A_i \cap B)}{P(B)} = \sum_{i=1}^\infty \frac{P(A_i \cap B)}{P(B)} = \sum_{i=1}^\infty Q(A_i)$$
+            </li>
+          </ol>
+          <p>
+            <strong>【核心結論】</strong>：條件機率具備一般機率測度的一切性質！舉凡加法定理、單調性、餘事件定理，在條件機率下均完全成立（例如 $P(A^c \mid B) = 1 - P(A \mid B)$）。
+          </p>
+        </section>
+
+        <!-- --------------------------------------------------------------------
+             單元五：範例題目
+             -------------------------------------------------------------------- -->
+        <section class="article-section" id="section-5">
+          <h2>五、範例題目 (Example Problems)</h2>
+
+          <div class="example-box">
+            <div class="example-header">
+              <span>【經典例題 1】醫學檢驗與條件機率（偽陽性直覺陷阱）</span>
+              <span class="example-badge">經典題型</span>
+            </div>
+            <p>
+              <strong>題目敘述：</strong><br>
+              某種罕見疾病在特定群體中的患病率為 $0.1\%$（即每 1000 人中有 1 人患病）。現有一種篩檢試劑，其檢測性能如下：
+            </p>
+            <ul>
+              <li>若受檢者確實患病，檢驗結果呈陽性（Positive）的機率（敏感度 Sensitivity）為 $99\%$。</li>
+              <li>若受檢者未患病，檢驗結果呈陽性的機率（偽陽性率 False Positive Rate）為 $2\%$。</li>
+            </ul>
+            <p>
+              若某受檢者隨機接受檢測後結果為陽性，請計算：<strong>此人實際患病的機率為何？</strong>
+            </p>
+
+            <div class="example-steps">
+              <div class="example-step-title">步驟一：清楚定義事件與已知機率</div>
+              <p>
+                設 $D$ 為受檢者實際患病的事件，$T^+$ 為檢測結果呈陽性的事件。<br>
+                依題意已知：
+              </p>
+              $$P(D) = 0.001 \implies P(D^c) = 1 - 0.001 = 0.999$$
+              $$P(T^+ \mid D) = 0.99$$
+              $$P(T^+ \mid D^c) = 0.02$$
+              <p>我們欲求的目標為條件機率：$P(D \mid T^+)$。</p>
+
+              <div class="example-step-title">步驟二：計算陽性結果的全機率 $P(T^+)$</div>
+              <p>
+                由全機率定理（Law of Total Probability），陽性檢測結果可能來自「真正患病者」或「未患病者的偽陽性」：
+              </p>
+              $$\begin{aligned}
+              P(T^+) &= P(D \cap T^+) + P(D^c \cap T^+) \\
+              &= P(D) P(T^+ \mid D) + P(D^c) P(T^+ \mid D^c) \\
+              &= (0.001 \times 0.99) + (0.999 \times 0.02) \\
+              &= 0.00099 + 0.01998 \\
+              &= 0.02097
+              \end{aligned}$$
+
+              <div class="example-step-title">步驟三：套用條件機率（貝氏公式）計算 $P(D \mid T^+)$</div>
+              $$\begin{aligned}
+              P(D \mid T^+) &= \frac{P(D \cap T^+)}{P(T^+)} \\
+              &= \frac{0.00099}{0.02097} \approx 0.04721
+              \end{aligned}$$
+
+              <div class="example-step-title">步驟四：結論與直觀解釋</div>
+              <p>
+                計算結果顯示：受檢者在檢驗呈陽性的條件下，<strong>實際患病的機率僅約為 $4.72\%$</strong>！<br>
+                <strong>直觀原因</strong>：由於母體患病率極低（底數極小），未患病者龐大人口基數產生的「$2\%$ 偽陽性人數（約 20 人）」遠遠多於「真患病者的陽性人數（約 1 人）」。因此，單次陽性結果並不足以斷定確診，必須進行二次複檢。
+              </p>
+            </div>
+          </div>
+
+          <div class="example-box">
+            <div class="example-header">
+              <span>【經典例題 2】不放回抽樣與乘法鏈式法則</span>
+              <span class="example-badge">概念題型</span>
+            </div>
+            <p>
+              <strong>題目敘述：</strong><br>
+              袋中有 5 顆紅球與 3 顆白球。若以<strong>不放回方式</strong>連續隨機抽取 3 顆球，求抽出順序恰好為「紅白紅」的機率。
+            </p>
+            <div class="example-steps">
+              <div class="example-step-title">解題步驟：</div>
+              <p>
+                令 $R_1$ 為第 1 次抽中紅球、$W_2$ 為第 2 次抽中白球、$R_3$ 為第 3 次抽中紅球。<br>
+                套用機率鏈式法則：
+              </p>
+              $$P(R_1 \cap W_2 \cap R_3) = P(R_1) \cdot P(W_2 \mid R_1) \cdot P(R_3 \mid R_1 \cap W_2)$$
+              <ul>
+                <li>第 1 次抽球：總共 8 顆球，紅球 5 顆，故 $P(R_1) = \frac{5}{8}$。</li>
+                <li>第 2 次抽球：袋內剩 7 顆球（4 紅 3 白），故 $P(W_2 \mid R_1) = \frac{3}{7}$。</li>
+                <li>第 3 次抽球：袋內剩 6 顆球（4 紅 2 白），故 $P(R_3 \mid R_1 \cap W_2) = \frac{4}{6} = \frac{2}{3}$。</li>
+              </ul>
+              <p>相乘得：</p>
+              $$P(R_1 \cap W_2 \cap R_3) = \frac{5}{8} \times \frac{3}{7} \times \frac{4}{6} = \frac{60}{336} = \frac{5}{28} \approx 0.1786$$
+            </div>
+          </div>
+        </section>
+
+        <!-- --------------------------------------------------------------------
+             單元六：重點整理
+             -------------------------------------------------------------------- -->
+        <section class="article-section" id="section-6">
+          <h2>六、重點整理 (Summary & Key Takeaways)</h2>
+
+          <div class="summary-card">
+            <h3>💡 本單元必記重點</h3>
+            <ul class="summary-list">
+              <li>
+                <strong>公理化本質</strong>：柯氏三大公理（非負性、規範性、可數可加性）建立了機率測度的最小完備公理系統，所有機率定理均可由這三條公理邏輯推演而來。
+              </li>
+              <li>
+                <strong>條件機率是縮放也是新測度</strong>：$P(A \mid B)$ 將樣本空間限制在事件 $B$ 之內，並以 $P(B)$ 為分母重新歸一化。固定條件 $B$ 後，條件機率本身完全滿足三大公理。
+              </li>
+              <li>
+                <strong>獨立性 $\ne$ 互斥性（經典陷阱）</strong>：
+                <ul>
+                  <li><strong>互斥（Mutually Exclusive）</strong>：$A \cap B = \emptyset \implies P(A \cap B) = 0$。如果 $P(A) > 0$ 且 $P(B) > 0$，互斥事件<strong>絕對不獨立</strong>（因為一個發生，另一個必然不發生）。</li>
+                  <li><strong>獨立（Independent）</strong>：$P(A \cap B) = P(A)P(B)$。事件 $B$ 的發生完全不影響事件 $A$ 的機率。</li>
+                </ul>
+              </li>
+              <li>
+                <strong>連鎖鏈式法則</strong>：多元交集機率可分解為一系列單變數條件機率的連續乘積，是高維機率模型（如貝氏網路、隨機過程）的基礎算子。
+              </li>
+            </ul>
+          </div>
+        </section>
+
+      </article>
+
+      <!-- 文章底部導航按鈕 -->
+      <div class="article-nav-actions">
+        <a href="../pages/probability.html" class="btn btn-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>返回 機率論 目錄</span>
+        </a>
+        <a href="../index.html" class="btn btn-outline">返回網站首頁</a>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ========================================================================
+       全站一致頁尾 (Footer)
+       ======================================================================== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="brand-logo" style="margin-bottom: 12px;">
+            <div class="brand-icon">📐</div>
+            <span>StatNote</span>
+          </div>
+          <p>以溫暖文青的視覺設計，記錄機率論、數理統計與計量經濟學的直觀直覺與嚴謹推導。</p>
+        </div>
+
+        <div class="footer-nav">
+          <h4>主題分類</h4>
+          <ul class="footer-links">
+            <li><a href="../pages/probability.html">🎲 機率論 (Probability)</a></li>
+            <li><a href="../pages/math-stat.html">📊 數理統計 (Mathematical Statistics)</a></li>
+            <li><a href="../pages/econometrics.html">📈 計量經濟學 (Econometrics)</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-nav">
+          <h4>專案資訊</h4>
+          <ul class="footer-links">
+            <li><a href="../README.md">📖 專案 README</a></li>
+            <li><a href="../AGENTS.md">🤖 協作規範 AGENTS.md</a></li>
+            <li><a href="https://github.com" target="_blank" rel="noopener noreferrer">🌐 GitHub Pages 託管</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>© <span id="current-year">2026</span> <strong>StatNote 統計學習筆記站</strong>. All rights reserved.</div>
+        <div>Designed with Warm Literary Aesthetic · Pure HTML / CSS / JS</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 全站共用互動腳本（相對路徑） -->
+  <script src="../script.js"></script>
+</body>
+</html>
