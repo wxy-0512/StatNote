@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>計量經濟學 (Econometrics) | StatNote 統計學習筆記</title>
+  <meta name="description" content="StatNote 計量經濟學專區：探討古典 OLS 迴歸、高斯馬可夫定理、異質變異、內生性、工具變數與面板資料。">
+
+  <!-- 全站樣式表（相對路徑） -->
+  <link rel="stylesheet" href="../style.css">
+
+  <!-- 字體引入 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- KaTeX 數學公式 CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+</head>
+<body>
+
+  <!-- ========================================================================
+       頂部導覽列 (Navbar)
+       ======================================================================== -->
+  <header class="site-header">
+    <div class="container navbar-inner">
+      <a href="../index.html" class="brand-logo" aria-label="StatNote 首頁">
+        <div class="brand-icon">📐</div>
+        <span>StatNote</span>
+        <span class="brand-tagline">統計學習筆記</span>
+      </a>
+
+      <button class="nav-toggle-btn" aria-label="切換導覽選單" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <nav>
+        <ul class="nav-menu">
+          <li><a href="../index.html" class="nav-link">首頁</a></li>
+          <li><a href="probability.html" class="nav-link">機率論</a></li>
+          <li><a href="math-stat.html" class="nav-link">數理統計</a></li>
+          <li><a href="econometrics.html" class="nav-link active">計量經濟學</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       分類橫幅區 (Category Banner)
+       ======================================================================== -->
+  <section class="page-banner">
+    <div class="container">
+      <nav class="breadcrumb" aria-label="麵包屑導覽">
+        <a href="../index.html">首頁</a>
+        <span>/</span>
+        <span aria-current="page">計量經濟學</span>
+      </nav>
+
+      <div class="page-title-group">
+        <div class="category-icon-lg icon-econ">📈</div>
+        <div>
+          <span class="section-tag">Category 03</span>
+          <h1>計量經濟學 (Econometrics)</h1>
+          <p>連結理論與實證資料的因果推論工具，解析迴歸模型、識別假定、內生性與工具變數。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       文章清單與核心主題架構 (Articles & Syllabus Grid)
+       ======================================================================== -->
+  <main class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Curriculum & Notes</span>
+        <h2 class="section-title">核心單元規劃</h2>
+        <p class="section-desc">以下為本領域規劃收錄之核心主題，未來每一篇單元皆依據六步標準結構陸續上線：</p>
+      </div>
+
+      <div class="articles-grid">
+        <!-- 模組 1（正式發布） -->
+        <article class="article-card" style="border-color: var(--color-sage); background: linear-gradient(180deg, var(--bg-surface) 0%, var(--bg-secondary) 100%);">
+          <div class="article-card-header">
+            <span class="article-category-chip" style="background-color: var(--color-sage); color: #fff;">精選文章</span>
+            <span class="article-date" style="color: var(--color-sage-dark); font-weight: 600;">已上線 · 六步完整推導</span>
+          </div>
+          <h3 class="article-title">
+            <a href="../articles/ordinary-least-squares.html" style="color: var(--color-coffee);">普通最小平方法 (Ordinary Least Squares, OLS)</a>
+          </h3>
+          <p class="article-excerpt">
+            計量實證因果推論基石：簡單線性迴歸、最小化殘差平方和（SSR）之常態方程式推導、高斯-馬可夫五大假定、BLUE 最優性質與教育報酬率之實證經濟詮釋。
+          </p>
+          <a href="../articles/ordinary-least-squares.html" class="btn btn-primary" style="margin-top: auto; padding: 8px 18px; font-size: 0.88rem; align-self: flex-start;">
+            <span>閱讀完整筆記</span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </a>
+        </article>
+
+        <!-- 模組 2 -->
+        <div class="article-card">
+          <div class="article-card-header">
+            <span class="article-category-chip">假定違背</span>
+            <span class="article-date">規劃中</span>
+          </div>
+          <h3 class="article-title">異質變異與穩健標準誤（Heteroskedasticity & White SE）</h3>
+          <p class="article-excerpt">
+            殘差變異非常數的後果、White 檢定、加權最小平方法（WLS）以及三明治穩健共變異矩陣估計。
+          </p>
+        </div>
+
+        <!-- 模組 3 -->
+        <div class="article-card">
+          <div class="article-card-header">
+            <span class="article-category-chip">因果識別</span>
+            <span class="article-date">規劃中</span>
+          </div>
+          <h3 class="article-title">內生性成因與工具變數法（Endogeneity & 2SLS）</h3>
+          <p class="article-excerpt">
+            遺漏變數、測量誤差與雙向因果探討；工具變數相關性與外生性條件、二階段最小平方法（2SLS）推導。
+          </p>
+        </div>
+
+        <!-- 模組 4 -->
+        <div class="article-card">
+          <div class="article-card-header">
+            <span class="article-category-chip">面板資料</span>
+            <span class="article-date">規劃中</span>
+          </div>
+          <h3 class="article-title">面板資料模型（Fixed Effects vs Random Effects & Hausman Test）</h3>
+          <p class="article-excerpt">
+            個體固定效果模型（Within 轉換）、隨機效果模型（FGLS）以及決定兩者選取的 Hausman 檢定理論。
+          </p>
+        </div>
+
+        <!-- 模組 5 -->
+        <div class="article-card">
+          <div class="article-card-header">
+            <span class="article-category-chip">時間序列</span>
+            <span class="article-date">規劃中</span>
+          </div>
+          <h3 class="article-title">時間序列定態性與單根檢定（Stationarity & Dickey-Fuller Test）</h3>
+          <p class="article-excerpt">
+            弱定態（Weak Stationarity）、自相關函數（ACF）、假性迴歸（Spurious Regression）與共整合（Cointegration）概念。
+          </p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ========================================================================
+       全站一致頁尾 (Footer)
+       ======================================================================== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="brand-logo" style="margin-bottom: 12px;">
+            <div class="brand-icon">📐</div>
+            <span>StatNote</span>
+          </div>
+          <p>以溫暖文青的視覺設計，記錄機率論、數理統計與計量經濟學的直觀直覺與嚴謹推導。</p>
+        </div>
+
+        <div class="footer-nav">
+          <h4>主題分類</h4>
+          <ul class="footer-links">
+            <li><a href="probability.html">🎲 機率論 (Probability)</a></li>
+            <li><a href="math-stat.html">📊 數理統計 (Mathematical Statistics)</a></li>
+            <li><a href="econometrics.html">📈 計量經濟學 (Econometrics)</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-nav">
+          <h4>專案資訊</h4>
+          <ul class="footer-links">
+            <li><a href="../README.md">📖 專案 README</a></li>
+            <li><a href="../AGENTS.md">🤖 協作規範 AGENTS.md</a></li>
+            <li><a href="https://github.com" target="_blank" rel="noopener noreferrer">🌐 GitHub Pages 託管</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>© <span id="current-year">2026</span> <strong>StatNote 統計學習筆記站</strong>. All rights reserved.</div>
+        <div>Designed with Warm Literary Aesthetic · Pure HTML / CSS / JS</div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../script.js"></script>
+</body>
+</html>

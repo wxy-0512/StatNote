@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>數理統計 (Mathematical Statistics) | StatNote 統計學習筆記</title>
+  <meta name="description" content="StatNote 數理統計專區：深入點估計、充分統計量、動差估計、最大概似估計、假設檢定與漸近性質。">
+
+  <!-- 全站樣式表（相對路徑） -->
+  <link rel="stylesheet" href="../style.css">
+
+  <!-- 字體引入 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- KaTeX 數學公式 CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+</head>
+<body>
+
+  <!-- ========================================================================
+       頂部導覽列 (Navbar)
+       ======================================================================== -->
+  <header class="site-header">
+    <div class="container navbar-inner">
+      <a href="../index.html" class="brand-logo" aria-label="StatNote 首頁">
+        <div class="brand-icon">📐</div>
+        <span>StatNote</span>
+        <span class="brand-tagline">統計學習筆記</span>
+      </a>
+
+      <button class="nav-toggle-btn" aria-label="切換導覽選單" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <nav>
+        <ul class="nav-menu">
+          <li><a href="../index.html" class="nav-link">首頁</a></li>
+          <li><a href="probability.html" class="nav-link">機率論</a></li>
+          <li><a href="math-stat.html" class="nav-link active">數理統計</a></li>
+          <li><a href="econometrics.html" class="nav-link">計量經濟學</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       分類橫幅區 (Category Banner)
+       ======================================================================== -->
+  <section class="page-banner">
+    <div class="container">
+      <nav class="breadcrumb" aria-label="麵包屑導覽">
+        <a href="../index.html">首頁</a>
+        <span>/</span>
+        <span aria-current="page">數理統計</span>
+      </nav>
+
+      <div class="page-title-group">
+        <div class="category-icon-lg icon-stat">📊</div>
+        <div>
+          <span class="section-tag">Category 02</span>
+          <h1>數理統計 (Mathematical Statistics)</h1>
+          <p>從樣本資料反推母體規律的嚴謹理論，解析點估計、充分性、區間估計與假設檢定。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       文章清單與核心主題架構 (Articles & Syllabus Grid)
+       ======================================================================== -->
+  <main class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Curriculum & Notes</span>
+        <h2 class="section-title">核心單元規劃</h2>
+        <p class="section-desc">以下為本領域規劃收錄之核心主題，未來每一篇單元皆依據六步標準結構陸續上線：</p>
+      </div>
+
+      <div class="articles-grid">
+        <!-- 模組 1 -->
+        <div class="article-card">
+          <div class="article-card-header">
+            <span class="article-category-chip">估計理論</span>
+            <span class="article-date">規劃中</span>
+          </div>
+          <h3 class="article-title">點估計品質評估（Unbiasedness, MSE & Consistency）</h3>
+          <p class="article-excerpt">
+            不偏性、有效性、一致性與 Cramér-Rao 下界（CRLB）的定義與數學證明。
+          </p>
+        </div>
+
+        <!-- 模組 2 -->
+        <div class="article-card">
+          <div class="article-card-header">
+            <span class="article-category-chip">充分統計量</span>
+            <span class="article-date">規劃中</span>
+          </div>
+          <h3 class="article-title">充分統計量與因子分解定理（Neyman Factorization & Rao-Blackwell）</h3>
+          <p class="article-excerpt">
+            資料精煉的極致：充分性、完備性（Completeness）以及 Lehmann-Scheffé 定理推導 UMVUE。
+          </p>
+        </div>
+
+        <!-- 模組 3（正式發布） -->
+        <article class="article-card" style="border-color: var(--color-sage); background: linear-gradient(180deg, var(--bg-surface) 0%, var(--bg-secondary) 100%);">
+          <div class="article-card-header">
+            <span class="article-category-chip" style="background-color: var(--color-sage); color: #fff;">精選文章</span>
+            <span class="article-date" style="color: var(--color-sage-dark); font-weight: 600;">已上線 · 六步完整推導</span>
+          </div>
+          <h3 class="article-title">
+            <a href="../articles/maximum-likelihood-estimation.html" style="color: var(--color-coffee);">最大概似估計 (Maximum Likelihood Estimation, MLE)</a>
+          </h3>
+          <p class="article-excerpt">
+            現代統計推論基石：概似函數與機率密度之區別、對數轉換技巧、一階與二階條件求解、白努利分佈完整微積分推導與漸近統計性質。
+          </p>
+          <a href="../articles/maximum-likelihood-estimation.html" class="btn btn-primary" style="margin-top: auto; padding: 8px 18px; font-size: 0.88rem; align-self: flex-start;">
+            <span>閱讀完整筆記</span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </a>
+        </article>
+
+        <!-- 模組 4 -->
+        <div class="article-card">
+          <div class="article-card-header">
+            <span class="article-category-chip">假設檢定</span>
+            <span class="article-date">規劃中</span>
+          </div>
+          <h3 class="article-title">最佳檢定與 Neyman-Pearson 引理（UMP Tests & LRT）</h3>
+          <p class="article-excerpt">
+            第一型與第二型錯誤權衡，概似比檢定（Likelihood Ratio Test, LRT）與 Wilks 定理（漸近卡方分佈）。
+          </p>
+        </div>
+
+        <!-- 模組 5 -->
+        <div class="article-card">
+          <div class="article-card-header">
+            <span class="article-category-chip">區間估計</span>
+            <span class="article-date">規劃中</span>
+          </div>
+          <h3 class="article-title">樞紐變數法與信賴區間（Pivotal Quantity & Confidence Intervals）</h3>
+          <p class="article-excerpt">
+            從常態母體、大樣本逼近到信賴區間的幾何詮釋與嚴格數學構造方法。
+          </p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ========================================================================
+       全站一致頁尾 (Footer)
+       ======================================================================== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="brand-logo" style="margin-bottom: 12px;">
+            <div class="brand-icon">📐</div>
+            <span>StatNote</span>
+          </div>
+          <p>以溫暖文青的視覺設計，記錄機率論、數理統計與計量經濟學的直觀直覺與嚴謹推導。</p>
+        </div>
+
+        <div class="footer-nav">
+          <h4>主題分類</h4>
+          <ul class="footer-links">
+            <li><a href="probability.html">🎲 機率論 (Probability)</a></li>
+            <li><a href="math-stat.html">📊 數理統計 (Mathematical Statistics)</a></li>
+            <li><a href="econometrics.html">📈 計量經濟學 (Econometrics)</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-nav">
+          <h4>專案資訊</h4>
+          <ul class="footer-links">
+            <li><a href="../README.md">📖 專案 README</a></li>
+            <li><a href="../AGENTS.md">🤖 協作規範 AGENTS.md</a></li>
+            <li><a href="https://github.com" target="_blank" rel="noopener noreferrer">🌐 GitHub Pages 託管</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>© <span id="current-year">2026</span> <strong>StatNote 統計學習筆記站</strong>. All rights reserved.</div>
+        <div>Designed with Warm Literary Aesthetic · Pure HTML / CSS / JS</div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../script.js"></script>
+</body>
+</html>
